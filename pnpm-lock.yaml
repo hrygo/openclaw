@@ -4,6 +4,9 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+overrides:
+  '@sinclair/typebox': 0.34.45
+
 patchedDependencies:
   '@mariozechner/pi-ai':
     hash: bf3e904ebaad236b8c3bb48c7d1150a1463735e783acaab6d15d6cd381b43832
@@ -29,7 +32,7 @@ importers:
         specifier: ^0.30.2
         version: 0.30.2(ws@8.18.3)(zod@4.2.1)
       '@sinclair/typebox':
-        specifier: ^0.34.45
+        specifier: 0.34.45
         version: 0.34.45
       '@whiskeysockets/baileys':
         specifier: 7.0.0-rc.9

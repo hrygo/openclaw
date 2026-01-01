@@ -127,6 +127,11 @@
     "vitest": "^4.0.16",
     "wireit": "^0.14.12"
   },
+  "pnpm": {
+    "overrides": {
+      "@sinclair/typebox": "0.34.45"
+    }
+  },
   "vitest": {
     "coverage": {
       "provider": "v8",

@@ -1,7 +1,6 @@
 import { type ChildProcessWithoutNullStreams, spawn } from "node:child_process";
 import { randomUUID } from "node:crypto";
 import type { AgentTool, AgentToolResult } from "@mariozechner/pi-ai";
-import { StringEnum } from "@mariozechner/pi-ai";
 import { Type } from "@sinclair/typebox";
 
 import {
@@ -30,6 +29,18 @@ const DEFAULT_MAX_OUTPUT = clampNumber(
   1_000,
   150_000,
 );
+
+const stringEnum = (
+  values: readonly string[],
+  options?: Parameters<typeof Type.Union>[1],
+) =>
+  Type.Union(
+    values.map((value) => Type.Literal(value)) as [
+      ReturnType<typeof Type.Literal>,
+      ...ReturnType<typeof Type.Literal>[],
+    ],
+    options,
+  );
 
 export type BashToolDefaults = {
   backgroundMs?: number;
@@ -60,7 +71,7 @@ const bashSchema = Type.Object({
     }),
   ),
   stdinMode: Type.Optional(
-    StringEnum(["pipe", "pty"] as const, {
+    stringEnum(["pipe", "pty"] as const, {
       description: "Only pipe is supported",
     }),
   ),
@@ -83,7 +94,8 @@ export type BashToolDetails =
 
 export function createBashTool(
   defaults?: BashToolDefaults,
-): AgentTool<typeof bashSchema, BashToolDetails> {
+  // biome-ignore lint/suspicious/noExplicitAny: TypeBox schema type from pi-ai uses a different module instance.
+): AgentTool<any, BashToolDetails> {
   const defaultBackgroundMs = clampNumber(
     defaults?.backgroundMs ?? readEnvInt("PI_BASH_YIELD_MS"),
     20_000,
@@ -329,7 +341,7 @@ export function createBashTool(
 export const bashTool = createBashTool();
 
 const processSchema = Type.Object({
-  action: StringEnum(
+  action: stringEnum(
     ["list", "poll", "log", "write", "kill", "clear", "remove"] as const,
     {
       description: "Process action",
@@ -346,7 +358,8 @@ const processSchema = Type.Object({
 
 export function createProcessTool(
   defaults?: ProcessToolDefaults,
-): AgentTool<typeof processSchema> {
+  // biome-ignore lint/suspicious/noExplicitAny: TypeBox schema type from pi-ai uses a different module instance.
+): AgentTool<any> {
   if (defaults?.cleanupMs !== undefined) {
     setJobTtlMs(defaults.cleanupMs);
   }

@@ -110,7 +110,6 @@ describe("getHealthSnapshot", () => {
     testConfig = { telegram: { tokenFile } };
     testStore = {};
     vi.stubEnv("TELEGRAM_BOT_TOKEN", "");
-    vi.stubEnv("DISCORD_BOT_TOKEN", "");
 
     const calls: string[] = [];
     vi.stubGlobal(

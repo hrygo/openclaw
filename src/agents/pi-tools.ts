@@ -1,6 +1,6 @@
 import type { AgentTool, AgentToolResult } from "@mariozechner/pi-ai";
 import { codingTools, readTool } from "@mariozechner/pi-coding-agent";
-import { type TSchema, Type } from "@sinclair/typebox";
+import { Type } from "@sinclair/typebox";
 
 import { detectMime } from "../media/mime.js";
 import { startWebLoginWithQr, waitForWebLogin } from "../web/login-qr.js";
@@ -103,7 +103,8 @@ async function normalizeReadImageResult(
   return { ...result, content: nextContent };
 }
 
-type AnyAgentTool = AgentTool<TSchema, unknown>;
+// biome-ignore lint/suspicious/noExplicitAny: TypeBox schema type from pi-ai uses a different module instance.
+type AnyAgentTool = AgentTool<any, unknown>;
 
 function extractEnumValues(schema: unknown): unknown[] | undefined {
   if (!schema || typeof schema !== "object") return undefined;
@@ -204,7 +205,7 @@ function normalizeToolParameters(tool: AnyAgentTool): AnyAgentTool {
         : {}),
       additionalProperties:
         "additionalProperties" in schema ? schema.additionalProperties : true,
-    } as unknown as TSchema,
+    },
   };
 }
 
